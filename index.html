@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A5/1 Cipher Visualizer</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <h1>A5/1 Cipher Visualizer</h1>
 
         <div class="controls">
             <div class="input-group">
-                <label for="key">64-bit Key (binary):</label>
+                <label for="key">Key (binary):</label>
                 <input type="text" id="key" value="0101010101010101010101010101010101010101010101010101010101010101">
             </div>
             <div class="input-group">
-                <label for="frame">22-bit Frame No. (binary):</label>
+                <label for="frame">Frame No. (binary):</label>
                 <input type="text" id="frame" value="1100110011001100110011">
             </div>
             <div class="input-group">
                 <label for="plaintext">Plaintext (ASCII):</label>
                 <input type="text" id="plaintext" value="HELLO">
             </div>
-            <button id="initializeBtn">Initialize LFSRs</button>
-            <button id="nextStepBtn" disabled>Next Keystream Bit</button>
-            <button id="runAllBtn" disabled>Generate Full Keystream & Encrypt/Decrypt</button>
+            <div>
+                <button id="initializeBtn">Initialize All At Once</button>
+            </div>
+            <div>
+                <button id="startInitBtn">Start Initialization</button>
+                <button id="nextKeyBitBtn" disabled>Next Key Bit</button>
+                <button id="nextFrameBitBtn" disabled>Next Frame Bit</button>
+                <button id="nextDummyClockBtn" disabled>Next Dummy Clock</button>
+            </div>
+
+            <div>
+                <button id="nextStepBtn" disabled>Next Keystream Bit</button>
+                <button id="runAllBtn" disabled>Generate Full Keystream & Encrypt/Decrypt</button>
+            </div>
             <button id="resetBtn">Reset All</button>
         </div>
 
@@ -51,7 +64,7 @@
                     <p>Clocking Decision: <span id="clockZDecision">-</span></p>
                 </div>
             </div>
-             <p>Majority Bit: <span id="majorityBitDisplay">-</span></p>
+            <p>Majority Bit: <span id="majorityBitDisplay">-</span></p>
         </div>
 
         <div class="output-section">
@@ -76,7 +89,7 @@
                 <label>Ciphertext (hex):</label>
                 <span id="ciphertextHex">-</span>
             </div>
-             <div class="output-group">
+            <div class="output-group">
                 <label>Decrypted Text (ASCII):</label>
                 <span id="decryptedText">-</span>
             </div>
@@ -90,4 +103,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -281,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update button states
         nextFrameBitBtn.disabled = true;
         nextDummyClockBtn.disabled = false;
+        nextDummyClockInput.disabled = false;
 
         log("100 dummy clocks to process. Click 'Next Dummy Clock'.");
       }
@@ -293,38 +294,52 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (initStepCounter < 100) {
-      const clockBitX = lfsrX[LFSR_X_CONFIG.clockBitIndex];
-      const clockBitY = lfsrY[LFSR_Y_CONFIG.clockBitIndex];
-      const clockBitZ = lfsrZ[LFSR_Z_CONFIG.clockBitIndex];
+    const totalDummyClocks = parseInt(nextDummyClockInput.value, 10) || 100;
 
-      const majority = clockBitX + clockBitY + clockBitZ >= 2 ? 1 : 0;
+    for (let i = 0; i < totalDummyClocks; i++) {
+      if (initStepCounter < 100) {
+        const clockBitX = lfsrX[LFSR_X_CONFIG.clockBitIndex];
+        const clockBitY = lfsrY[LFSR_Y_CONFIG.clockBitIndex];
+        const clockBitZ = lfsrZ[LFSR_Z_CONFIG.clockBitIndex];
 
-      let logMsg = `Dummy Clock ${
-        initStepCounter + 1
-      }/100: Cx=${clockBitX}, Cy=${clockBitY}, Cz=${clockBitZ}. Majority=${majority}. `;
-      let clocked = [];
+        const majority = clockBitX + clockBitY + clockBitZ >= 2 ? 1 : 0;
 
-      if (clockBitX === majority) {
-        clockLFSR(lfsrX, LFSR_X_CONFIG);
-        clocked.push("X");
-      }
-      if (clockBitY === majority) {
-        clockLFSR(lfsrY, LFSR_Y_CONFIG);
-        clocked.push("Y");
-      }
-      if (clockBitZ === majority) {
-        clockLFSR(lfsrZ, LFSR_Z_CONFIG);
-        clocked.push("Z");
-      }
+        let logMsg = `Dummy Clock ${
+          initStepCounter + 1
+        }/100: Cx=${clockBitX}, Cy=${clockBitY}, Cz=${clockBitZ}. Majority=${majority}. `;
+        let clocked = [];
 
-      log(logMsg + `Clocked: ${clocked.join(", ") || "None"}`);
-      updateAllLFSRDisplays();
-      initStepCounter++;
+        if (clockBitX === majority) {
+          clockLFSR(lfsrX, LFSR_X_CONFIG);
+          clocked.push("X");
+        }
+        if (clockBitY === majority) {
+          clockLFSR(lfsrY, LFSR_Y_CONFIG);
+          clocked.push("Y");
+        }
+        if (clockBitZ === majority) {
+          clockLFSR(lfsrZ, LFSR_Z_CONFIG);
+          clocked.push("Z");
+        }
 
-      if (initStepCounter >= 100) {
-        log("Dummy clocks complete. Initialization finished!");
-        completeInitialization();
+        clockXDecisionSpan.textContent = clocked.includes("X")
+          ? `Clocked (bit ${clockBitX} == maj ${majority})`
+          : `Not Clocked (bit ${clockBitX} != maj ${majority})`;
+        clockYDecisionSpan.textContent = clocked.includes("Y")
+          ? `Clocked (bit ${clockBitY} == maj ${majority})`
+          : `Not Clocked (bit ${clockBitY} != maj ${majority})`;
+        clockZDecisionSpan.textContent = clocked.includes("Z")
+          ? `Clocked (bit ${clockBitZ} == maj ${majority})`
+          : `Not Clocked (bit ${clockBitZ} != maj ${majority})`;
+
+        log(logMsg + `Clocked: ${clocked.join(", ") || "None"}`);
+        updateAllLFSRDisplays();
+        initStepCounter++;
+
+        if (initStepCounter >= 100) {
+          log("Dummy clocks complete. Initialization finished!");
+          completeInitialization();
+        }
       }
     }
   }
@@ -343,6 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initialized = true;
     initPhase = 4;
     nextDummyClockBtn.disabled = true;
+    nextDummyClockInput.disabled = true;
     nextStepBtn.disabled = false;
     runAllBtn.disabled = false;
     log("\n--- Initialization Complete. Ready for Keystream Generation ---");
@@ -438,6 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nextKeyBitBtn.disabled = true;
     nextFrameBitBtn.disabled = true;
     nextDummyClockBtn.disabled = true;
+    nextDummyClockInput.disabled = true;
 
     // Enable keystream generation
     nextStepBtn.disabled = false;
@@ -627,6 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nextKeyBitBtn.disabled = true;
     nextFrameBitBtn.disabled = true;
     nextDummyClockBtn.disabled = true;
+    nextDummyClockInput.disabled = true;
     nextStepBtn.disabled = true;
     runAllBtn.disabled = true;
     log("Application Reset.");
